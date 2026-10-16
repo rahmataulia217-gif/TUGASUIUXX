@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generate New Link | Order Form</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #272727;
+      background: #e9e9e9;
+      font-synthesis: none;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      padding: 42px 20px;
+      background: #e9e9e9;
+    }
+
+    .browser {
+      width: min(100%, 920px);
+      margin: 0 auto;
+      overflow: hidden;
+      border: 1px solid #a5a5a5;
+      background: #f5f5f5;
+      box-shadow: 0 12px 32px rgb(0 0 0 / 12%);
+    }
+
+    .browser-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 43px;
+      padding: 8px 12px;
+      border-bottom: 1px solid #aaa;
+      background: #d5d5d5;
+    }
+
+    .browser-actions {
+      display: flex;
+      gap: 5px;
+    }
+
+    .browser-actions span {
+      display: grid;
+      width: 21px;
+      height: 21px;
+      place-items: center;
+      border: 1px solid #888;
+      border-radius: 50%;
+      background: #f8f8f8;
+      color: #444;
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    .address-bar {
+      flex: 1;
+      height: 22px;
+      padding: 3px 9px;
+      overflow: hidden;
+      border: 1px solid #777;
+      border-radius: 12px;
+      background: #fff;
+      color: #777;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .browser-dot {
+      width: 31px;
+      height: 17px;
+      border: 1px solid #777;
+      border-radius: 50%;
+      background: #f4f4f4;
+    }
+
+    .page {
+      min-height: 590px;
+      padding: 22px clamp(18px, 5vw, 54px) 34px;
+      background: #efefef;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 35px;
+      border: 2px solid #555;
+      background: #fff;
+    }
+
+    nav a {
+      flex: 1;
+      padding: 9px 5px;
+      color: #343434;
+      font-size: 12px;
+      text-align: center;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    nav a + a {
+      border-left: 1px solid #c7c7c7;
+    }
+
+    nav a:hover,
+    nav a:focus-visible {
+      background: #e8f1e8;
+    }
+
+    form {
+      max-width: 690px;
+      margin: 0 auto;
+    }
+
+    .form-layout {
+      display: grid;
+      grid-template-columns: minmax(155px, 210px) minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .upload-column {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .image-preview {
+      position: relative;
+      display: grid;
+      width: 100%;
+      aspect-ratio: 1;
+      overflow: hidden;
+      place-items: center;
+      border: 2px solid #777;
+      background:
+        linear-gradient(to bottom right, transparent calc(50% - 1px), #888 50%, transparent calc(50% + 1px)),
+        linear-gradient(to top right, transparent calc(50% - 1px), #888 50%, transparent calc(50% + 1px)),
+        #fff;
+    }
+
+    .image-preview img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .upload-button {
+      width: fit-content;
+      padding: 5px 9px;
+      border: 1px solid #777;
+      border-radius: 2px;
+      background: #fff;
+      color: #222;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .upload-button:hover {
+      background: #e8e8e8;
+    }
+
+    input[type="file"] {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      clip-path: inset(50%);
+    }
+
+    .fields {
+      display: grid;
+      gap: 9px;
+    }
+
+    .field {
+      display: grid;
+      grid-template-columns: 126px minmax(0, 1fr);
+      gap: 9px;
+      align-items: start;
+    }
+
+    .field label,
+    .field-label {
+      padding-top: 5px;
+      color: #393939;
+      font-size: 12px;
+    }
+
+    input:not([type="checkbox"]):not([type="file"]),
+    select,
+    textarea {
+      width: 100%;
+      min-width: 0;
+      border: 1px solid #555;
+      border-radius: 2px;
+      background: #fff;
+      color: #222;
+      font: inherit;
+      font-size: 12px;
+    }
+
+    input:not([type="checkbox"]):not([type="file"]),
+    select {
+      min-height: 27px;
+      padding: 4px 7px;
+    }
+
+    textarea {
+      min-height: 82px;
+      padding: 7px;
+      resize: vertical;
+    }
+
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible,
+    button:focus-visible,
+    .upload-button:focus-within {
+      outline: 2px solid #27843d;
+      outline-offset: 2px;
+    }
+
+    .delivery-count {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+    }
+
+    .delivery-count select {
+      width: 34px;
+      padding: 3px;
+    }
+
+    .helper {
+      margin: 4px 0 1px 135px;
+      color: #555;
+      font-size: 11px;
+    }
+
+    .choices {
+      display: grid;
+      gap: 7px;
+      margin: 0 0 1px 135px;
+    }
+
+    .choice {
+      display: flex;
+      gap: 7px;
+      align-items: center;
+      color: #333;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    input[type="checkbox"] {
+      width: 14px;
+      height: 14px;
+      margin: 0;
+      accent-color: #348346;
+    }
+
+    .contact-fields {
+      display: grid;
+      gap: 8px;
+    }
+
+    .submit-row {
+      display: flex;
+      justify-content: center;
+      margin: 30px 0 0 135px;
+    }
+
+    .submit-button {
+      min-width: 145px;
+      padding: 9px 17px;
+      border: 1px solid #176628;
+      border-radius: 3px;
+      background: #218536;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: inset 0 1px rgb(255 255 255 / 20%);
+    }
+
+    .submit-button:hover {
+      background: #176d2a;
+    }
+
+    .status {
+      margin: 18px 0 0 135px;
+      color: #205b2c;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .status:empty {
+      display: none;
+    }
+
+    @media (max-width: 620px) {
+      body {
+        padding: 18px 10px;
+      }
+
+      .page {
+        min-height: 0;
+        padding: 17px 15px 25px;
+      }
+
+      nav {
+        margin-bottom: 25px;
+      }
+
+      nav a {
+        padding: 8px 2px;
+        font-size: 10px;
+      }
+
+      .form-layout {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .upload-column {
+        width: min(100%, 190px);
+        margin: 0 auto;
+      }
+
+      .field {
+        grid-template-columns: 112px minmax(0, 1fr);
+        gap: 7px;
+      }
+
+      .helper,
+      .choices {
+        margin-left: 119px;
+      }
+
+      .submit-row,
+      .status {
+        margin-left: 119px;
+      }
+    }
+
+    @media (max-width: 390px) {
+      .field {
+        grid-template-columns: 95px minmax(0, 1fr);
+      }
+
+      .helper,
+      .choices {
+        margin-left: 102px;
+      }
+
+      .submit-row,
+      .status {
+        margin-left: 102px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="browser" aria-label="Order form page">
+    <div class="browser-bar" aria-hidden="true">
+      <div class="browser-actions">
+        <span>‹</span>
+        <span>›</span>
+        <span>×</span>
+        <span>⌂</span>
+      </div>
+      <div class="address-bar">http://</div>
+      <div class="browser-dot"></div>
+    </div>
+
+    <section class="page">
+      <nav aria-label="Main navigation">
+        <a href="#home">Home</a>
+        <a href="#generate">Generate Link</a>
+        <a href="#history">Transaction History</a>
+        <a href="#policy">Policy</a>
+        <a href="#logout">Logout</a>
+      </nav>
+
+      <form id="order-form">
+        <div class="form-layout">
+          <div class="upload-column">
+            <div class="image-preview" id="image-preview" aria-label="Product image preview">
+              <img id="preview-image" alt="" hidden>
+            </div>
+            <label class="upload-button" for="product-image">Upload Picture</label>
+            <input id="product-image" type="file" accept="image/*">
+          </div>
+
+          <div class="fields">
+            <div class="field">
+              <label for="title">Title Here :</label>
+              <input id="title" name="title" type="text" value="MacBook Air E800" required>
+            </div>
+
+            <div class="field">
+              <label for="description">Description :</label>
+              <textarea id="description" name="description" required>Year: 2004
+Model:
+Condition: New</textarea>
+            </div>
+
+            <div class="field">
+              <label for="account-number">Account Number :</label>
+              <input id="account-number" name="account-number" type="text" value="123-456-789-0" required>
+            </div>
+
+            <div class="field">
+              <label for="bank">Bank :</label>
+              <select id="bank" name="bank" required>
+                <option>HSBC</option>
+                <option>Bank Central Asia (BCA)</option>
+                <option>Bank Mandiri</option>
+                <option>Bank Negara Indonesia (BNI)</option>
+                <option>Bank Rakyat Indonesia (BRI)</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="account-holder">Account Holder :</label>
+              <input id="account-holder" name="account-holder" type="text" value="Name Here" required>
+            </div>
+
+            <div class="field">
+              <span class="field-label">Transaction :</span>
+              <div class="delivery-count">
+                <select id="transaction-count" name="transaction-count" aria-label="Number of transactions">
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
+                  <option>4</option>
+                  <option>5</option>
+                  <option>6</option>
+                  <option>7</option>
+                  <option>8</option>
+                  <option>9</option>
+                  <option>10</option>
+                </select>
+                <span></span>
+              </div>
+            </div>
+
+            <p class="helper">* If the transaction is for 3 person, choose 3 from the drop-down list.</p>
+
+            <div class="choices">
+              <label class="choice">
+                <input id="send-mobile" name="send-mobile" type="checkbox" checked>
+                <span>Send to Mobile Phone</span>
+              </label>
+              <label class="choice">
+                <input id="send-email" name="send-email" type="checkbox" checked>
+                <span>Send to Email</span>
+              </label>
+            </div>
+
+            <div class="contact-fields">
+              <div class="field">
+                <label for="phone">Send to Mobile Phone :</label>
+                <input id="phone" name="phone" type="tel" value="1234567890, 1234567891">
+              </div>
+              <div class="field">
+                <label for="email">Send to Email :</label>
+                <input id="email" name="email" type="email" value="name@example.com">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="submit-row">
+          <button class="submit-button" type="submit">Generate New Link</button>
+        </div>
+        <p class="status" id="status-message" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    const imageInput = document.getElementById("product-image");
+    const previewImage = document.getElementById("preview-image");
+    const orderForm = document.getElementById("order-form");
+    const statusMessage = document.getElementById("status-message");
+
+    imageInput.addEventListener("change", () => {
+      const [file] = imageInput.files;
+      if (!file) {
+        previewImage.hidden = true;
+        previewImage.removeAttribute("src");
+        return;
+      }
+
+      previewImage.src = URL.createObjectURL(file);
+      previewImage.hidden = false;
+    });
+
+    orderForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const generatedUrl = new URL(window.location.href);
+      generatedUrl.search = new URLSearchParams(new FormData(orderForm)).toString();
+
+      const link = document.createElement("a");
+      link.href = generatedUrl.href;
+      link.textContent = "Open generated order link";
+      link.target = "_blank";
+      link.rel = "noopener";
+
+      statusMessage.replaceChildren(
+        document.createTextNode("Your order link is ready: "),
+        link
+      );
+    });
+  </script>
+</body>
+</html>
